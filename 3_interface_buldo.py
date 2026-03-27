@@ -41,7 +41,7 @@ def charger_ia():
     # 2. Reconnexion de la Mémoire Locale (RAG)
     embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     vectordb = Chroma(persist_directory="./buldo_db", embedding_function=embeddings)
-    retriever = vectordb.as_retriever(search_kwargs={"k": 10})
+    retriever = vectordb.as_retriever(search_kwargs={"k": 35})
     
     def recherche_memoire(requete: str) -> str:
         documents = retriever.invoke(requete)
@@ -102,7 +102,7 @@ def charger_ia():
     ## 3. PROFONDEUR DES RÉPONSES
     - Développe légèrement tes réponses pour apporter de la valeur et de la précision. Ne réponds pas par de simples "oui" ou "non". 
     - Explique le "pourquoi" des choses avec un ton conversationnel et posé.
-    - Sois efficace et instructif. Donne des détails intéressants, mais sans tomber dans des monologues interminables. Trouve le juste milieu entre le pote "chill" et le conseiller intelligent.
+    - Sois efficace et bien instructif. Donne des détails intéressants, mais sans tomber dans des monologues interminables. Trouve le juste milieu entre le pote "chill" et le conseiller intelligent.
     - Je veux que tu répondre a la question sans changer de sujet
 
     ## 4. RÈGLES D'UTILISATION DES OUTILS
