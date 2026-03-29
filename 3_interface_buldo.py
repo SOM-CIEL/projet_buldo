@@ -79,7 +79,7 @@ def charger_ia():
 
     # 4. Le Cerveau (Gemini 3.1 Flash Lite)
     llm = ChatGoogleGenerativeAI(
-        model="gemini-3.1-flash-lite", 
+        model="gemini-3.1-flash-lite-preview", 
         temperature=0.7
     )
 
