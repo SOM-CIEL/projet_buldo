@@ -1,7 +1,7 @@
 # api_buldo.py - Le Cerveau Émotionnel de Buldo
 import os
 import uuid
-import json  # <-- NOUVEAU : Pour gérer le format de réponse
+import json  
 import re
 from dotenv import load_dotenv
 import warnings
