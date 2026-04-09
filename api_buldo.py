@@ -1,4 +1,4 @@
-# api_buldo.py - Le Cerveau Émotionnel de Buldo
+
 import os
 import uuid
 import json  
@@ -8,7 +8,7 @@ import warnings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 warnings.filterwarnings("ignore")
 
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -44,7 +44,8 @@ if not ma_cle:
     ma_cle = "CLE_INTROUVABLE" 
 os.environ["GOOGLE_API_KEY"] = ma_cle
 
-embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+
+embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 vectordb = Chroma(persist_directory="./buldo_db", embedding_function=embeddings)
 retriever = vectordb.as_retriever(search_kwargs={"k": 10})
 
