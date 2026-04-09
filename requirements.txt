@@ -1,3 +1,4 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
 fastapi
 uvicorn
 pydantic
@@ -10,3 +11,4 @@ langgraph
 python-dotenv
 pypdf
 sentence-transformers
+
