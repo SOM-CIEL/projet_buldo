@@ -6,5 +6,7 @@ langchain
 langchain-google-genai
 langchain_huggingface
 langchain-chroma
+langchain-community
 chromadb
 pydantic
+duckduckgo-search
