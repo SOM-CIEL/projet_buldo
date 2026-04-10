@@ -45,7 +45,7 @@ if not ma_cle:
 os.environ["GOOGLE_API_KEY"] = ma_cle
 
 
-embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
+embeddings = GoogleGenerativeAIEmbeddings(model="gemini-embedding-001")
 vectordb = Chroma(persist_directory="./buldo_db", embedding_function=embeddings)
 retriever = vectordb.as_retriever(search_kwargs={"k": 10})
 
