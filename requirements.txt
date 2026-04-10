@@ -10,3 +10,4 @@ langchain-community
 chromadb
 pydantic
 duckduckgo-search
+sentence-transformers
