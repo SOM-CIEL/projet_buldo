@@ -1,4 +1,3 @@
-
 import os
 import uuid
 import json  
@@ -12,7 +11,6 @@ from langchain_google_genai import GoogleGenerativeAIEmbeddings
 warnings.filterwarnings("ignore")
 
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from langchain_community.tools import DuckDuckGoSearchRun
 from langchain_core.tools import Tool, tool 
@@ -36,7 +34,7 @@ class RequeteChat(BaseModel):
     message: str
 
 # ==========================================
-# 2. CHARGEMENT DE BULDO (Identique à avant)
+# 2. CHARGEMENT DU CERVEAU GOOGLE (ULTRA-LÉGER)
 # ==========================================
 load_dotenv()
 ma_cle = os.getenv("GOOGLE_API_KEY") 
@@ -44,18 +42,63 @@ if not ma_cle:
     ma_cle = "CLE_INTROUVABLE" 
 os.environ["GOOGLE_API_KEY"] = ma_cle
 
-
-embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+# Le nouveau cerveau de Google (0 Mo de RAM utilisés sur ton serveur !)
+embeddings = GoogleGenerativeAIEmbeddings(model="gemini-embedding-001")
 vectordb = Chroma(persist_directory="./buldo_db", embedding_function=embeddings)
 retriever = vectordb.as_retriever(search_kwargs={"k": 10})
 
+# ==========================================
+# 3. L'AUTO-LOADER DE FICHIERS (TXT, CSV, PDF)
+# ==========================================
+dossier_donnees = "./mes_donnees"
+os.makedirs(dossier_donnees, exist_ok=True)
+
+try:
+    # Si la mémoire est vide, on lit les fichiers !
+    if vectordb._collection.count() == 0:
+        print("🧠 Wouff ! Mémoire vide. Je lis tes fichiers dans 'mes_donnees'...")
+        textes_extraits = []
+        
+        for nom_fichier in os.listdir(dossier_donnees):
+            chemin = os.path.join(dossier_donnees, nom_fichier)
+            try:
+                # Lecture des TXT et CSV
+                if nom_fichier.endswith('.txt') or nom_fichier.endswith('.csv'):
+                    with open(chemin, "r", encoding="utf-8") as f:
+                        textes_extraits.append(f.read())
+                        print(f"📄 J'ai lu {nom_fichier}")
+                
+                # Lecture des PDF
+                elif nom_fichier.endswith('.pdf'):
+                    from pypdf import PdfReader
+                    reader = PdfReader(chemin)
+                    texte_pdf = ""
+                    for page in reader.pages:
+                        texte_pdf += page.extract_text() + "\n"
+                    textes_extraits.append(texte_pdf)
+                    print(f"📕 J'ai lu {nom_fichier}")
+                    
+            except Exception as e:
+                print(f"⚠️ Impossible de lire {nom_fichier} : {e}")
+                
+        # On injecte tout ça dans la mémoire de Buldo
+        if textes_extraits:
+            vectordb.add_texts(texts=textes_extraits)
+            print("✅ Mémoire rechargée à 100% avec Google Embeddings !")
+            
+except Exception as e:
+    print(f"Erreur avec la base de données : {e}")
+
+# ==========================================
+# 4. OUTILS DE BULDO
+# ==========================================
 def recherche_memoire(requete: str) -> str:
     documents = retriever.invoke(requete)
     return "\n\n".join([doc.page_content for doc in documents])
 
 outil_memoire = Tool(
     name="recherche_memoire_buldo",
-    description="Fouille la mémoire de Buldo.",
+    description="Fouille la mémoire de Buldo. Indispensable pour parler de Nicolas.",
     func=recherche_memoire
 )
 
