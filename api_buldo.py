@@ -185,6 +185,34 @@ def extraire_texte(message):
     return content
 
 # ==========================================
+# 6. LA PORTE SECRÈTE POUR VOIR LES SOUVENIRS
+# ==========================================
+@app.get("/souvenirs")
+async def voir_les_souvenirs():
+    dossier = "./mes_donnees"
+    
+    # Vérifie si le dossier existe
+    if not os.path.exists(dossier):
+        return {"message": "Le dossier est vide ou n'existe pas encore."}
+    
+    fichiers = os.listdir(dossier)
+    liste_souvenirs = []
+    
+    # On lit tous les fichiers qui s'appellent "souvenir_..."
+    for fichier in fichiers:
+        if fichier.startswith("souvenir_"):
+            try:
+                with open(os.path.join(dossier, fichier), "r", encoding="utf-8") as f:
+                    contenu = f.read()
+                    liste_souvenirs.append({"fichier": fichier, "texte": contenu})
+            except Exception as e:
+                pass
+                
+    return {
+        "message": f"J'ai trouvé {len(liste_souvenirs)} souvenirs créés par les utilisateurs !",
+        "souvenirs": liste_souvenirs
+    }
+# ==========================================
 # 4. LA PORTE D'ENTRÉE DU SITE WEB (LE DÉTECTEUR)
 # ==========================================
 @app.post("/chat")
