@@ -45,7 +45,7 @@ os.environ["GOOGLE_API_KEY"] = ma_cle
 # Le nouveau cerveau de Google (0 Mo de RAM utilisés sur ton serveur !)
 embeddings = GoogleGenerativeAIEmbeddings(model="gemini-embedding-001")
 vectordb = Chroma(persist_directory="./buldo_db", embedding_function=embeddings)
-retriever = vectordb.as_retriever(search_kwargs={"k": 10})
+retriever = vectordb.as_retriever(search_kwargs={"k": 3})
 
 # ==========================================
 # 3. L'AUTO-LOADER DE FICHIERS (TXT, CSV, PDF)
@@ -119,7 +119,7 @@ try:
 except Exception:
     tools = [outil_memoire, ajouter_nouveau_souvenir]
 
-llm = ChatGoogleGenerativeAI(model="gemini-3.1-flash-lite-preview", temperature=0.7)
+llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.7)
 
 # 🧠 Le Retour du Super-Prompt !
 system_prompt = SystemMessage(content="""
