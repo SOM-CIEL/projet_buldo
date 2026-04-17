@@ -41,7 +41,7 @@ def charger_ia():
     # 2. Reconnexion de la Mémoire Locale (RAG)
     embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     vectordb = Chroma(persist_directory="./buldo_db", embedding_function=embeddings)
-    retriever = vectordb.as_retriever(search_kwargs={"k": 35})
+    retriever = vectordb.as_retriever(search_kwargs={"k": 3})
     
     def recherche_memoire(requete: str) -> str:
         documents = retriever.invoke(requete)
